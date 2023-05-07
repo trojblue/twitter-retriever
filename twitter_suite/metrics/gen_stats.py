@@ -3,13 +3,17 @@ import plotly.graph_objects as go
 import plotly.subplots as sp
 from PIL import Image
 from collections import defaultdict
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from pathlib import Path
 from utils.data_loader import PipelineDataLoader
 
 
 class DatasetMetrics:
     def __init__(self, source_root, is_twitter=False, logger=None):
+
+        if is_twitter:
+            print("twitter metrics ON; loading json files WILL BE SLOW")
+
         self.loader = PipelineDataLoader(logger)
         self.source_root = source_root
         self.is_twitter = is_twitter
@@ -17,9 +21,8 @@ class DatasetMetrics:
         self.image_count = defaultdict(int)
         self.file_sizes = []
         self.dimensions = []
-        self.likes = []
+        self.fav_count = []
         self.process_files()
-
 
     def _load_json(self, json_path):
         json = self.loader.load_json(json_path)
@@ -42,10 +45,10 @@ class DatasetMetrics:
 
                     # likes
                     if self.is_twitter:
-                        json_path = file_path+".json"
+                        json_path = Path(file_path + ".json")
                         json_data = self._load_json(json_path)
-
-                        self.likes.append(int(os.path.basename(foldername)))
+                        fav_count = json_data.get("favorite_count", -1)
+                        self.fav_count.append(int(fav_count))
 
                     # Image dimensions
                     try:
@@ -86,8 +89,11 @@ class DatasetMetrics:
         topic_names, topic_counts = zip(*self.image_count.items())
         return go.Bar(x=topic_names, y=topic_counts, text=topic_counts, textposition="auto")
 
+    def plot_fav_count_distribution(self):
+        return go.Histogram(x=self.fav_count, nbinsx=1000, histnorm="probability")
 
-def get_plot_configs(metrics):
+
+def get_plot_configs(metrics: DatasetMetrics):
     # Define which plots to display
     plot_configs = [
         [
@@ -97,6 +103,21 @@ def get_plot_configs(metrics):
         [
             {"title": "Image dimensions distribution", "trace": metrics.plot_image_dimensions()},
             {"title": "Class imbalance", "trace": metrics.plot_class_imbalance()},
+        ],
+    ]
+    return plot_configs
+
+
+def get_twitter_plot_configs(metrics: DatasetMetrics):
+    # Define which plots to display
+    plot_configs = [
+        [
+            {"title": "Number of images per topic", "trace": metrics.plot_number_of_images()},
+            {"title": "File size distribution", "trace": metrics.plot_file_size_distribution()},
+        ],
+        [
+            {"title": "Image dimensions distribution", "trace": metrics.plot_image_dimensions()},
+            {"title": "Favorite counts distribution", "trace": metrics.plot_fav_count_distribution()},
         ],
     ]
     return plot_configs
