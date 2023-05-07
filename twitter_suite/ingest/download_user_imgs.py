@@ -1,6 +1,6 @@
 import subprocess
 from pathlib import Path
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 
 def read_handles(file_path: str) -> list:
@@ -26,7 +26,6 @@ def download_users(txt_path: str, dst_dir: str = ""):
     """从txt文件中读取twitter handle, 并使用gallery-dl下载用户的media"""
     handles = read_handles(txt_path)
     progress_bar = tqdm(handles, unit="user")
-    print(f"Downloading media for {len(handles)} users.")
 
     for handle in progress_bar:
         progress_bar.set_description(f"Downloading media for {handle}")
