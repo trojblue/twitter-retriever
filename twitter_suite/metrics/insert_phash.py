@@ -9,7 +9,7 @@ import concurrent.futures
 source_root = input("root dir:")
 csv_file = os.path.join(source_root, "aesthetic_scores.csv")
 new_csv_file = os.path.join(source_root, "aesthetic_scores_with_phash.csv")
-extensions = ('.jpg', '.jpeg', '.png', '.webp')
+extensions = (".jpg", ".jpeg", ".png", ".webp")
 
 
 # Function to calculate the phash of an image file
@@ -35,11 +35,14 @@ for foldername, _, filenames in os.walk(source_root):
 
 # Calculate phash values for all image files in subdirectories using multithreading
 with concurrent.futures.ThreadPoolExecutor() as executor:
-    for file_path, phash_value in tqdm(zip(image_files, executor.map(calculate_phash, image_files)), total=len(image_files)):
+    for file_path, phash_value in tqdm(
+        zip(image_files, executor.map(calculate_phash, image_files)),
+        total=len(image_files),
+    ):
         phash_dict[os.path.basename(file_path)] = str(phash_value)
 
 # Add a new column 'phash' to the DataFrame with the phash values
-df['phash'] = df['filename'].apply(lambda x: phash_dict.get(x, None))
+df["phash"] = df["filename"].apply(lambda x: phash_dict.get(x, None))
 
 # Save the updated DataFrame to a new CSV file
 df.to_csv(new_csv_file, index=False)

@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 from typing import List, Tuple, Dict, Optional
 from tqdm.auto import tqdm
 
-class DanbooruArtistFinder:
 
+class DanbooruArtistFinder:
     def __init__(self):
         self.base_url = "https://danbooru.donmai.us"
         self.headers = {
@@ -40,8 +40,7 @@ class DanbooruArtistFinder:
         return flattened_list
 
     def get_twitter_handles_from_csv(self, csv_file):
-
-        with open(csv_file, "r", encoding='utf-8') as f:
+        with open(csv_file, "r", encoding="utf-8") as f:
             reader = csv.reader(f)
             reader.__next__()
             twitter_handles = [row[2] for row in reader]  # 'username'
@@ -87,13 +86,17 @@ class DanbooruArtistFinder:
 
         return self.flatten_list(result), notfound
 
+
 def run(csv_file):
     finder = DanbooruArtistFinder()
     twitter_handles = finder.get_twitter_handles_from_csv(csv_file)
-    artists, notfound = finder.find_artists(twitter_handles)  # iumu, dino_(dinoartforame), tota_(sizukurubiks)
+    artists, notfound = finder.find_artists(
+        twitter_handles
+    )  # iumu, dino_(dinoartforame), tota_(sizukurubiks)
     for i in artists:
         print(i)
     print(notfound)
+
 
 def debug():
     post_url = "https://danbooru.donmai.us/posts/6081028"
@@ -101,9 +104,9 @@ def debug():
     artists = finder._get_artist_tags(post_url)
     print(artists)
 
+
 if __name__ == "__main__":
     # csv_file = "../../bin/trojblue_following.csv"
     csv_file = r"D:\CSC\twitter-retriever\bin\usernames.csv"
     run(csv_file)
     # run()
-

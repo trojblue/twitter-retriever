@@ -11,7 +11,13 @@ from embed import CLIPMapper, ImageReader
 
 
 class AestheticPredictor:
-    def __init__(self, clip_model="ViT-L/14", dim=768, mlp_model="sac+logos+ava1-l14-linearMSE.pth", device="cuda"):
+    def __init__(
+        self,
+        clip_model="ViT-L/14",
+        dim=768,
+        mlp_model="sac+logos+ava1-l14-linearMSE.pth",
+        device="cuda",
+    ):
         # CLIP embedding dim is 768 for CLIP ViT L 14
         start_time = time.perf_counter()
         self.clip_mapper = CLIPMapper(clip_model, device)
@@ -19,7 +25,9 @@ class AestheticPredictor:
         logging.info("[init model]: time: %.4f", time.perf_counter() - start_time)
 
     def predict(self, images, batch_size=16, num_workers=2):
-        reader = ImageReader(self.clip_mapper.preprocess, images, batch_size, num_workers)
+        reader = ImageReader(
+            self.clip_mapper.preprocess, images, batch_size, num_workers
+        )
         data_iter = reader.__iter__()
         scores = []
         pbar = tqdm(range(len(images)))
@@ -52,15 +60,15 @@ class AestheticPredictor:
 
 if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    predictor = AestheticPredictor("ViT-L/14", 768, "sac+logos+ava1-l14-linearMSE.pth", device)
+    predictor = AestheticPredictor(
+        "ViT-L/14", 768, "sac+logos+ava1-l14-linearMSE.pth", device
+    )
     files = glob.glob("images/*")
     # predict score
     scores = predictor.predict(files, 16, 2)
     # calculate md5
-    md5s = [hashlib.md5(open(f,'rb').read()).hexdigest() for f in tqdm(files)]
-    df = pd.DataFrame({
-        "filename": [os.path.basename(p) for p in files],
-        "score": scores,
-        "md5": md5s
-    })
+    md5s = [hashlib.md5(open(f, "rb").read()).hexdigest() for f in tqdm(files)]
+    df = pd.DataFrame(
+        {"filename": [os.path.basename(p) for p in files], "score": scores, "md5": md5s}
+    )
     df.to_csv("scores.csv")

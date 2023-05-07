@@ -5,6 +5,7 @@ import pandas as pd
 from datetime import datetime
 from tqdm.auto import tqdm
 
+
 def get_pixiv_filename(illust, url):
     if "create_date" in illust:
         create_date = datetime.fromisoformat(illust["create_date"])
@@ -18,15 +19,17 @@ def get_pixiv_filename(illust, url):
     filename = os.path.basename(url)
     return f"px_{date_str}_{user}_pid{filename}"
 
+
 def get_row(filename, df: pd.DataFrame):
-    row = df.loc[df['filename'] == filename]
+    row = df.loc[df["filename"] == filename]
     if not row.empty:
         return row.squeeze()
     else:
         return None
 
+
 def fill_aesthetic(filename, df: pd.DataFrame):
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         json_object = json.load(f)
     if json_object is None:
         return
@@ -54,8 +57,9 @@ def fill_aesthetic(filename, df: pd.DataFrame):
             bar.update(1)
     name, _ = os.path.splitext(os.path.basename(filename))
     path = os.path.dirname(filename)
-    with open(os.path.join(path, f"{name}-aes.json"), 'w') as f:
+    with open(os.path.join(path, f"{name}-aes.json"), "w") as f:
         json.dump(json_object, f)
+
 
 if __name__ == "__main__":
     df = pd.read_csv("scores-2021-merge.csv")

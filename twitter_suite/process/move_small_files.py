@@ -4,9 +4,12 @@ from PIL import Image
 from tqdm import tqdm
 
 
-extensions = ('.jpg', '.jpeg', '.png', '.webp')
+extensions = (".jpg", ".jpeg", ".png", ".webp")
 
-def is_small_or_low_resolution(filename, size_threshold_kb=70, dimensions_threshold=768):
+
+def is_small_or_low_resolution(
+    filename, size_threshold_kb=70, dimensions_threshold=768
+):
     file_size_kb = os.path.getsize(filename) / 1024
 
     if file_size_kb < size_threshold_kb:
@@ -30,7 +33,9 @@ def move_small_files(source_root, size_threshold_kb=70, dimensions_threshold=768
             if filename.lower().endswith(extensions):
                 source_path = os.path.join(foldername, filename)
 
-                if is_small_or_low_resolution(source_path, size_threshold_kb, dimensions_threshold):
+                if is_small_or_low_resolution(
+                    source_path, size_threshold_kb, dimensions_threshold
+                ):
                     relative_path = os.path.relpath(foldername, source_root)
                     destination_path = os.path.join(destination_root, relative_path)
 
@@ -40,7 +45,7 @@ def move_small_files(source_root, size_threshold_kb=70, dimensions_threshold=768
                     shutil.move(source_path, destination_path)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     size_threshold_kb = 70
     dimensions_threshold = 768
     source_root = input("source dir:")

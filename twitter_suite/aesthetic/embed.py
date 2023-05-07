@@ -12,6 +12,7 @@ def normalized(a, axis=-1, order=2):
     l2[l2 == 0] = 1
     return a / np.expand_dims(l2, axis)
 
+
 class CLIPMapper:
     def __init__(self, clip_model, device):
         model, preprocess = clip.load(clip_model, device=device)
@@ -32,7 +33,8 @@ class CLIPMapper:
             "image_path": image_path,
             "image_embs": image_embs,
         }
-    
+
+
 class ImageDataset(Dataset):
     def __init__(
         self,
@@ -52,17 +54,19 @@ class ImageDataset(Dataset):
         try:
             image_tensor = self.preprocess(Image.open(image_path))
         except Exception as e:
-            image_tensor = self.preprocess(Image.new('RGB', (256, 256)))
+            image_tensor = self.preprocess(Image.new("RGB", (256, 256)))
             print(f"load image error: {image_path}, {str(e)}")
         output["image_path"] = image_path
         output["image_tensor"] = image_tensor
         return output
 
+
 def collate_fn(batch):
-    batch = list(filter(lambda x: x['image_tensor'] is not None, batch))
+    batch = list(filter(lambda x: x["image_tensor"] is not None, batch))
     if len(batch):
         return default_collate(batch)
     return {"image_path": [], "image_tensor": None}
+
 
 def dataset_to_dataloader(dataset, batch_size, num_workers):
     dataloader = DataLoader(
@@ -72,9 +76,10 @@ def dataset_to_dataloader(dataset, batch_size, num_workers):
         num_workers=num_workers,
         pin_memory=True,
         prefetch_factor=2,
-        collate_fn=collate_fn
+        collate_fn=collate_fn,
     )
     return dataloader
+
 
 class ImageReader:
     def __init__(self, processor, images, batch_size, num_workers):

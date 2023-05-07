@@ -12,6 +12,7 @@ import multiprocessing as mp
 from PIL import Image
 import concurrent.futures
 
+
 def phash_diff(file1, file2, phash_dict, phash_diff_threshold):
     diff = phash_dict[file1].__sub__(phash_dict[file2])
     if diff < phash_diff_threshold:
@@ -33,22 +34,23 @@ def find_similar_files(args):
     return None
 
 
-
 def move_similar_images(source_root, destination_root, csv_file, phash_diff_threshold):
     # Read the existing CSV
     df = pd.read_csv(csv_file)
-    df['phash'] = df['phash'].apply(lambda x: hex_to_hash(x) if isinstance(x, str) else None)
+    df["phash"] = df["phash"].apply(
+        lambda x: hex_to_hash(x) if isinstance(x, str) else None
+    )
 
     # Filter out rows with missing phash values
-    df = df.dropna(subset=['phash'])
+    df = df.dropna(subset=["phash"])
 
     # Create a dictionary to store the phash values
-    phash_dict = {row['filename']: row['phash'] for _, row in df.iterrows()}
+    phash_dict = {row["filename"]: row["phash"] for _, row in df.iterrows()}
 
     # Create a dictionary to store author-file mappings
     author_files = {}
     for filename in phash_dict:
-        author = filename.split('__')[0]
+        author = filename.split("__")[0]
         if author in author_files:
             author_files[author].append(filename)
         else:
@@ -56,15 +58,17 @@ def move_similar_images(source_root, destination_root, csv_file, phash_diff_thre
 
     # Find similar files
     similar_files = set()
-    for author, files in tqdm(author_files.items(), desc='Processing authors'):
+    for author, files in tqdm(author_files.items(), desc="Processing authors"):
         for i, file1 in enumerate(files):
-            for file2 in files[i + 1:]:
+            for file2 in files[i + 1 :]:
                 diff = phash_dict[file1].__sub__(phash_dict[file2])
                 if diff < phash_diff_threshold:
                     similar_files.add((file1, file2))
 
     # Move the similar images
-    for foldername, _, filenames in tqdm(os.walk(source_root), desc='Moving similar images'):
+    for foldername, _, filenames in tqdm(
+        os.walk(source_root), desc="Moving similar images"
+    ):
         for filename1, filename2 in similar_files:
             if filename1 in filenames and filename2 in filenames:
                 file1_path = os.path.join(foldername, filename1)
@@ -93,9 +97,10 @@ def move_similar_images(source_root, destination_root, csv_file, phash_diff_thre
                     if not os.path.exists(destination_path):
                         os.makedirs(destination_path)
 
-                    move(file_to_move, os.path.join(destination_path, os.path.basename(file_to_move)))
-
-
+                    move(
+                        file_to_move,
+                        os.path.join(destination_path, os.path.basename(file_to_move)),
+                    )
 
 
 def debug():
@@ -104,22 +109,20 @@ def debug():
     base_dir = r"D:\CSC\twitter-suite\gallery-dl\twitter_z3zz4_min2020"
     csv_file = os.path.join(base_dir, "aesthetic_scores_with_phash.csv")
     df = pd.read_csv(csv_file)
-    df['phash'] = df['phash'].apply(lambda x: hex_to_hash(x) if isinstance(x, str) else None)
+    df["phash"] = df["phash"].apply(
+        lambda x: hex_to_hash(x) if isinstance(x, str) else None
+    )
 
     # Filter out rows with missing phash values
-    df = df.dropna(subset=['phash'])
+    df = df.dropna(subset=["phash"])
 
     # Create a dictionary to store the phash values
-    phash_dict = {row['filename']: row['phash'] for _, row in df.iterrows()}
+    phash_dict = {row["filename"]: row["phash"] for _, row in df.iterrows()}
 
     print(phash_diff(file1, file2, phash_dict, 50))
 
 
-
-
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     # debug()
     phash_diff_threshold = 50
     source_root = input("source dir:")

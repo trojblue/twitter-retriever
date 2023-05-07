@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 source_root = input("get a dir:")  # Replace with your source root folder path
-extensions = ('.jpg', '.jpeg', '.png', '.webp')
+extensions = (".jpg", ".jpeg", ".png", ".webp")
 
 image_count = defaultdict(int)
 file_sizes = []
@@ -38,25 +38,44 @@ for foldername, _, filenames in os.walk(source_root):
 progress_bar.close()
 
 # Create subplots
-fig = sp.make_subplots(rows=2, cols=2,
-                       subplot_titles=("Number of images per topic",
-                                       "File size distribution",
-                                       "Image dimensions distribution",
-                                       "Class imbalance"))
+fig = sp.make_subplots(
+    rows=2,
+    cols=2,
+    subplot_titles=(
+        "Number of images per topic",
+        "File size distribution",
+        "Image dimensions distribution",
+        "Class imbalance",
+    ),
+)
 
 # Number of images per topic
 topic_names, topic_counts = zip(*image_count.items())
-fig.add_trace(go.Bar(x=topic_names, y=topic_counts, text=topic_counts, textposition='auto'), row=1, col=1)
+fig.add_trace(
+    go.Bar(x=topic_names, y=topic_counts, text=topic_counts, textposition="auto"),
+    row=1,
+    col=1,
+)
 
 # File size distribution
-fig.add_trace(go.Histogram(x=file_sizes, nbinsx=50, histnorm='probability'), row=1, col=2)
+fig.add_trace(
+    go.Histogram(x=file_sizes, nbinsx=50, histnorm="probability"), row=1, col=2
+)
 
 # Image dimensions distribution
 widths, heights = zip(*dimensions)
-fig.add_trace(go.Scatter(x=widths, y=heights, mode='markers', marker=dict(opacity=0.2)), row=2, col=1)
+fig.add_trace(
+    go.Scatter(x=widths, y=heights, mode="markers", marker=dict(opacity=0.2)),
+    row=2,
+    col=1,
+)
 
 # Class imbalance
-fig.add_trace(go.Bar(x=topic_names, y=topic_counts, text=topic_counts, textposition='auto'), row=2, col=2)
+fig.add_trace(
+    go.Bar(x=topic_names, y=topic_counts, text=topic_counts, textposition="auto"),
+    row=2,
+    col=2,
+)
 
 # Update layout
 name = Path(source_root).name

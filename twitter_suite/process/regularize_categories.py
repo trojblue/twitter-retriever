@@ -10,9 +10,11 @@ percentile_target = 80
 # Set the exponential penalty factor
 penalty_factor = 0.7
 
-source_root = r"D:\Andrew\Pictures\Grabber\mai_saver"  
-destination_root = f"{source_root}_penalties_percentile{percentile_target}_factor{penalty_factor}"
-extensions = ('.jpg', '.jpeg', '.png', '.webp')
+source_root = r"D:\Andrew\Pictures\Grabber\mai_saver"
+destination_root = (
+    f"{source_root}_penalties_percentile{percentile_target}_factor{penalty_factor}"
+)
+extensions = (".jpg", ".jpeg", ".png", ".webp")
 
 # Count the number of images in each subfolder
 image_count = {}
@@ -30,7 +32,10 @@ move_counts = {}
 for folder, count in image_count.items():
     if count > target_image_count:
         # Apply exponential penalty
-        move_count = int(count - target_image_count * (1 - penalty_factor ** (count - target_image_count)))
+        move_count = int(
+            count
+            - target_image_count * (1 - penalty_factor ** (count - target_image_count))
+        )
         move_counts[folder] = move_count
     else:
         move_counts[folder] = 0
@@ -39,10 +44,10 @@ for folder, count in image_count.items():
 for folder, move_count in move_counts.items():
     if move_count > 0:
         all_files = [f for f in os.listdir(folder) if f.lower().endswith(extensions)]
-        
+
         # Sort the files by date (in ascending order)
-        sorted_files = sorted(all_files, key=lambda x: x.split('__')[1])
-        
+        sorted_files = sorted(all_files, key=lambda x: x.split("__")[1])
+
         files_to_move = sorted_files[:move_count]
 
         for filename in files_to_move:
