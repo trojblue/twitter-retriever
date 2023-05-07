@@ -6,8 +6,8 @@ import hashlib
 import logging
 import pandas as pd
 from tqdm.auto import tqdm
-from mlp import MLPPredictor
-from embed import CLIPMapper, ImageReader
+from .mlp import MLPPredictor
+from .embed import CLIPMapper, ImageReader
 
 
 class AestheticPredictor:
