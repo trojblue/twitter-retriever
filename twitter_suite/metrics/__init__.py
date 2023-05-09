@@ -1,4 +1,4 @@
-# import aesthetic from subdir
+# import _aesthetic from subdir
 from .gen_stats import DatasetMetrics as _DatasetMetrics
 from .gen_stats import get_twitter_plot_configs as _get_twitter_plot_configs
 from .aesthetic.get_aesthetics import AestheticMonitor as _AestheticMonitor

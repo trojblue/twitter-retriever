@@ -3,12 +3,11 @@ import shutil
 from PIL import Image
 from tqdm.auto import tqdm
 
-
 extensions = (".jpg", ".jpeg", ".png", ".webp")
 
 
 def is_small_or_low_resolution(
-    filename, size_threshold_kb=70, dimensions_threshold=768
+        filename: str, size_threshold_kb: int, dimensions_threshold: int
 ):
     file_size_kb = os.path.getsize(filename) / 1024
 
@@ -18,7 +17,9 @@ def is_small_or_low_resolution(
     try:
         with Image.open(filename) as img:
             width, height = img.size
-            if width < dimensions_threshold or height < dimensions_threshold:
+            img_pixels = width * height
+            threshold_pixels = dimensions_threshold ** 2
+            if img_pixels < threshold_pixels:
                 return True
     except IOError:
         pass
@@ -42,7 +43,7 @@ def move_small_files(source_root, size_threshold_kb=70, dimensions_threshold=768
                 source_path = os.path.join(foldername, filename)
 
                 if is_small_or_low_resolution(
-                    source_path, size_threshold_kb, dimensions_threshold
+                        source_path, size_threshold_kb, dimensions_threshold
                 ):
                     relative_path = os.path.relpath(foldername, source_root)
                     destination_path = os.path.join(destination_root, relative_path)
@@ -55,6 +56,6 @@ def move_small_files(source_root, size_threshold_kb=70, dimensions_threshold=768
 
 if __name__ == "__main__":
     size_threshold_kb = 70
-    dimensions_threshold = 768
+    dimensions_threshold = 640
     source_root = input("source dir:")
     move_small_files(source_root, size_threshold_kb, dimensions_threshold)

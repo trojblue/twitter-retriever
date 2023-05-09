@@ -2,6 +2,7 @@ from .move_small_files import move_small_files as _move_small_files
 from .move_folders_by_txt import move_folders_by_txt as _move_folders_by_txt
 from .move_low_aesthetic_files import move_low_aesthetic_files as _move_low_aesthetic_files
 from .move_old_files import move_files_older_than as _move_files_older_than
+from .copy_file_newer_than import copy_files_newer_than_year as _copy_files_newer_than_year
 
 def move_small_files(source_root: str, size_threshold_kb=70, dimensions_threshold=768):
     """
@@ -28,3 +29,10 @@ def move_files_older_than(source_root: str, min_year: int=2020):
     移动source_root里创建时间早于min_year的文件
     """
     _move_files_older_than(source_root, min_year)
+
+
+def copy_files_newer_than_year(source_root: str, dest_dir:str=None, min_year: int=2018):
+    """
+    复制source_root里创建时间晚于min_year的文件
+    """
+    _copy_files_newer_than_year(source_root, dest_dir, min_year)

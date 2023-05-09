@@ -6,7 +6,10 @@ from tqdm.auto import tqdm
 from typing import List
 import torch
 
-from .aesthetic import AestheticPredictor
+try:
+    from .aesthetic import AestheticPredictor
+except ImportError:
+    from twitter_suite.metrics.aesthetic.aesthetic import AestheticPredictor
 
 
 
@@ -40,7 +43,7 @@ def get_files_with_suffix(
 
 
 class AestheticMonitor:
-    def __init__(self, root_dir: str, output_csv: str = "aesthetic_scores.csv"):
+    def __init__(self, root_dir: str, output_csv: str = "metrics.csv"):
         self.root_dir = root_dir
         self.output_csv = os.path.join(root_dir, output_csv)
 
