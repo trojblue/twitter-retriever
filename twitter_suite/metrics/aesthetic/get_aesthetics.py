@@ -57,15 +57,28 @@ class AestheticMonitor:
     def _scan_for_files_to_change(self, monitor_dir: str) -> List[List]:
         files_to_change = []
         img_files = get_files_with_suffix(monitor_dir, IMG_FILES)
+        img_files_basename = set(os.path.basename(img) for img in img_files)
 
         if os.path.exists(self.output_csv):
             existing_df = pd.read_csv(self.output_csv)
+
+            # Filter the DataFrame to only include files within the monitor_dir
+            existing_df = existing_df[existing_df['filename'].isin(img_files_basename)]
             logged_files = set(existing_df["filename"])
+
+            # Check if the 'score' and 'md5' columns exist and if they have any missing values
+            if 'score' not in existing_df.columns or 'md5' not in existing_df.columns:
+                # If the columns do not exist, add all logged files to files_to_change
+                files_to_change.extend([[monitor_dir, img] for img in logged_files])
+            else:
+                # If the columns exist, add files with missing 'score' or 'md5' to files_to_change
+                missing_score_or_md5 = existing_df.loc[existing_df[['score', 'md5']].isnull().any(axis=1), 'filename']
+                files_to_change.extend([[monitor_dir, img] for img in missing_score_or_md5])
         else:
             logged_files = set()
 
-        for img in img_files:
-            if os.path.basename(img) not in logged_files:
+        for img in img_files_basename:
+            if img not in logged_files:
                 files_to_change.append([monitor_dir, img])
 
         return files_to_change
@@ -87,7 +100,12 @@ class AestheticMonitor:
         )
         return df
 
-    def predict_aesthetics(self) -> None:
+    def predict_aesthetics(self, dry_run: bool = False) -> None:
+        """
+        Predicts the aesthetic score of all images in the root directory.
+        : param dry_run: 为True时, 不会计算图片的美学分数, 只会扫描图片文件并生成csv
+        """
+
         files_to_change = []
         for root, _, _ in os.walk(self.root_dir):
             files_to_change.extend(self._scan_for_files_to_change(root))
@@ -96,7 +114,16 @@ class AestheticMonitor:
             f"{datetime.datetime.now()} [INFO] found {len(files_to_change)} file(s) for evaluation"
         )
 
-        aesthetics_df = self._predict_aesthetics(files_to_change)
+        if dry_run:
+            aesthetics_df = pd.DataFrame(
+                {
+                    "filename": [os.path.basename(p[1]) for p in files_to_change],
+                    "score": [None] * len(files_to_change),
+                    "md5": [None] * len(files_to_change),
+                }
+            )
+        else:
+            aesthetics_df = self._predict_aesthetics(files_to_change)
 
         if os.path.exists(self.output_csv):
             existing_df = pd.read_csv(self.output_csv)
@@ -116,4 +143,4 @@ class AestheticMonitor:
 if __name__ == "__main__":
     root_dir = input("Enter root directory: ")
     aesthetic_monitor = AestheticMonitor(root_dir)
-    aesthetic_monitor.predict_aesthetics()
+    aesthetic_monitor.predict_aesthetics(dry_run=False)

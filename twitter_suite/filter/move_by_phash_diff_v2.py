@@ -4,7 +4,9 @@ import pandas as pd
 from itertools import groupby
 from operator import itemgetter
 
-def move_duplicate_files(root_dir: str, csv_file: str, phash_threshold: int):
+def move_by_phash_diff(root_dir: str, csv_file: str=None, phash_threshold: int=4):
+
+    csv_file = csv_file or os.path.join(root_dir, 'metrics.csv')
     # Load the CSV file into a DataFrame
     df = pd.read_csv(csv_file)
 
@@ -56,5 +58,5 @@ if __name__ == '__main__':
     # Usage example
     root_dir = input("root dir:")
     csv_file = os.path.join(root_dir, "metrics.csv")
-    phash_threshold = 4  # Set the phash threshold value
-    move_duplicate_files(root_dir, csv_file, phash_threshold)
+    phash_threshold = 12  # Set the phash threshold value
+    move_by_phash_diff(root_dir, csv_file, phash_threshold)

@@ -5,12 +5,14 @@ from tqdm import tqdm
 
 
 
-if __name__ == '__main__':
-    root_directory_str = input("输入tagger根目录:")
-    root_directory = Path(root_directory_str)
+def move_json_txts(dir_str:str):
+    root_directory = Path(dir_str)
+    json_folder = root_directory / Path("![json]")
+    os.makedirs(json_folder, exist_ok=True)
 
     # Get a list of all subdirectories
     subdirs = [subdir for subdir in root_directory.iterdir() if subdir.is_dir()]
+
 
     # Iterate through all subdirectories with a progress bar
     for subdir in tqdm(subdirs, desc="Processing subdirectories"):
@@ -19,4 +21,11 @@ if __name__ == '__main__':
             # Check if the file is a JSON or TXT file
             if file.suffix in {".json", ".txt"}:
                 # Move the file to the root directory
-                shutil.move(str(file), str(root_directory / file.name))
+                shutil.move(str(file), str(json_folder / file.name))
+
+
+
+if __name__ == '__main__':
+    root_directory_str = input("输入tagger根目录:")
+    move_json_txts(root_directory_str)
+
