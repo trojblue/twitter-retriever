@@ -17,5 +17,5 @@ use:
 - 每隔(300)秒, 更新一次`<dir>`里的文件:
 - 设置间隔时间: `-i <interval>`
 ```bash
-python aesthetic_monitor.py -d <dir> 
+python get_aesthetics.py -d <dir> 
 ```
