@@ -3,7 +3,10 @@ import shutil
 import pandas as pd
 
 
-def move_not_anime_files(root_dir: str, csv_file: str):
+def move_non_anime_files(root_dir: str, csv_file: str):
+
+    csv_file= csv_file or os.path.join(root_dir, "metrics.csv")
+
     # Load the CSV file into a DataFrame
     df = pd.read_csv(csv_file)
 
@@ -25,7 +28,7 @@ def move_not_anime_files(root_dir: str, csv_file: str):
                 break
 
         if source_file_path is None:
-            print(f"File not found: {filename}")
+            # print(f"File not found: {filename}")
             continue
 
         # Construct the target file path
@@ -42,5 +45,5 @@ def move_not_anime_files(root_dir: str, csv_file: str):
 if __name__ == '__main__':
     # Usage example
     root_dir = input("root dir:")
-    csv_file = os.path.join(root_dir, "aesthetic_scores_with_metrics.csv")
-    move_not_anime_files(root_dir, csv_file)
+    csv_file = os.path.join(root_dir)
+    move_non_anime_files(root_dir, csv_file)

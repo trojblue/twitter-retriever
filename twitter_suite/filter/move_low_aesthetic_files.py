@@ -6,7 +6,7 @@ from tqdm.auto import tqdm
 
 def move_low_aesthetic_files(source_root: str, score_threshold: float=5):
     destination_root = f"{source_root}_aes_sub{score_threshold}"  # Replace with your
-    csv_file_path = os.path.join(source_root, "aesthetic_scores.csv")
+    csv_file_path = os.path.join(source_root, "metrics.csv")
     print(f"Moving files with _aesthetic < {score_threshold} to {destination_root}")
 
     # Create a dictionary that maps filenames to their paths
