@@ -10,6 +10,8 @@ requirements:
 ```
 opencv-python
 click
+panda
+tqdm
 ```
 
 use: 
