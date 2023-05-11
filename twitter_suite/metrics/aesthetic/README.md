@@ -13,7 +13,7 @@ click
 ```
 
 use: 
-见notebook，或者复制 bin/sac%2Blogos%2Bava1-l14-linearMSE.pth到这个目录然后：
+见notebook，或者复制 bin/sac+logos+ava1-l14-linearMSE.pth到这个目录然后：
 ```bash
 python get_aesthetics.py
 ```
