@@ -4,7 +4,7 @@ import pandas as pd
 from tqdm.auto import tqdm
 
 
-def move_low_aesthetic_files(source_root: str, score_threshold: float=5):
+def move_low_aesthetic_files(source_root: str, score_threshold: float = 5):
     destination_root = f"{source_root}_aes_sub{score_threshold}"  # Replace with your
     csv_file_path = os.path.join(source_root, "metrics.csv")
     print(f"Moving files with _aesthetic < {score_threshold} to {destination_root}")
@@ -36,7 +36,7 @@ def move_low_aesthetic_files(source_root: str, score_threshold: float=5):
             shutil.move(source_path, destination_path)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     score_threshold = 5.5
     source_root = input("sources root:")
     move_low_aesthetic_files(source_root, score_threshold)

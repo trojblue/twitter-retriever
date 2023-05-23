@@ -7,7 +7,7 @@ extensions = (".jpg", ".jpeg", ".png", ".webp")
 
 
 def is_small_or_low_resolution(
-        filename: str, size_threshold_kb: int, dimensions_threshold: int
+    filename: str, size_threshold_kb: int, dimensions_threshold: int
 ):
     file_size_kb = os.path.getsize(filename) / 1024
 
@@ -18,7 +18,7 @@ def is_small_or_low_resolution(
         with Image.open(filename) as img:
             width, height = img.size
             img_pixels = width * height
-            threshold_pixels = dimensions_threshold ** 2
+            threshold_pixels = dimensions_threshold**2
             if img_pixels < threshold_pixels:
                 return True
     except IOError:
@@ -43,7 +43,7 @@ def move_small_files(source_root, size_threshold_kb=70, dimensions_threshold=768
                 source_path = os.path.join(foldername, filename)
 
                 if is_small_or_low_resolution(
-                        source_path, size_threshold_kb, dimensions_threshold
+                    source_path, size_threshold_kb, dimensions_threshold
                 ):
                     relative_path = os.path.relpath(foldername, source_root)
                     destination_path = os.path.join(destination_root, relative_path)

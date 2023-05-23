@@ -1,49 +1,55 @@
 import os
-import shutil
 import pandas as pd
+import shutil
+from typing import Callable, Dict
 
 
-def move_non_anime_files(root_dir: str, csv_file: str):
+class FileMover:
+    def __init__(self, root_dir: str, csv_file: str = None):
+        self.root_dir = root_dir
+        self.csv_file = csv_file or os.path.join(root_dir, "metrics.csv")
+        self.df = self.load_dataframe()
+        self.file_index = self.create_file_index()
 
-    csv_file= csv_file or os.path.join(root_dir, "metrics.csv")
+    def load_dataframe(self) -> pd.DataFrame:
+        return pd.read_csv(self.csv_file)
 
-    # Load the CSV file into a DataFrame
-    df = pd.read_csv(csv_file)
+    def create_file_index(self) -> Dict[str, str]:
+        file_index = {}
+        for foldername, _, filenames in os.walk(self.root_dir):
+            for filename in filenames:
+                file_index[filename] = os.path.join(foldername, filename)
+        return file_index
 
-    # Filter the DataFrame to keep only the rows where cafe_style is not "anime"
-    not_anime_df = df[df['cafe_style'] != 'anime']
+    def move_files(self, df: pd.DataFrame, target_root_dir: str):
+        for _, row in df.iterrows():
+            filename = row["filename"]
+            source_file_path = self.file_index.get(filename)
+            if source_file_path is None:
+                continue
 
-    # Define the target root directory
-    target_root_dir = f"{root_dir}_not_anime"
+            relative_folder = os.path.relpath(
+                os.path.dirname(source_file_path), self.root_dir
+            )
+            target_folder = os.path.join(target_root_dir, relative_folder)
+            target_file_path = os.path.join(target_folder, filename)
 
-    # Iterate through each row in the filtered DataFrame
-    for index, row in not_anime_df.iterrows():
-        filename = row['filename']
+            os.makedirs(target_folder, exist_ok=True)
+            shutil.move(source_file_path, target_file_path)
 
-        # Find the source file path
-        source_file_path = None
-        for foldername, _, filenames in os.walk(root_dir):
-            if filename in filenames:
-                source_file_path = os.path.join(foldername, filename)
-                break
+    def move_files_based_on_condition(
+        self,
+        column: str,
+        condition: Callable[[pd.Series], pd.Series],
+        target_suffix: str,
+    ):
+        filtered_df = self.df[condition(self.df[column])]
+        target_root_dir = f"{self.root_dir}_{target_suffix}"
+        self.move_files(filtered_df, target_root_dir)
 
-        if source_file_path is None:
-            # print(f"File not found: {filename}")
-            continue
 
-        # Construct the target file path
-        relative_folder = os.path.relpath(os.path.dirname(source_file_path), root_dir)
-        target_folder = os.path.join(target_root_dir, relative_folder)
-        target_file_path = os.path.join(target_folder, filename)
-
-        # Create the target folder if it doesn't exist
-        os.makedirs(target_folder, exist_ok=True)
-
-        # Move the file to the target folder
-        shutil.move(source_file_path, target_file_path)
-
-if __name__ == '__main__':
-    # Usage example
+if __name__ == "__main__":
     root_dir = input("root dir:")
-    csv_file = os.path.join(root_dir)
-    move_non_anime_files(root_dir, csv_file)
+
+    file_mover = FileMover(root_dir)
+    file_mover.move_files_based_on_condition("score", lambda x: x < 5.5, "aes_sub5.5")

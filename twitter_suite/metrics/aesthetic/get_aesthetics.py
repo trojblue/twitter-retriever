@@ -12,7 +12,6 @@ except ImportError:
     from twitter_suite.metrics.aesthetic.aesthetic import AestheticPredictor
 
 
-
 __all_imgs_raw = (
     "jpg jpeg png bmp dds exif jp2 jpx pcx pnm ras gif tga tif tiff xbm xpm webp"
 )
@@ -20,7 +19,7 @@ IMG_FILES = ["." + i.strip() for i in __all_imgs_raw.split(" ")]
 
 
 def get_files_with_suffix(
-        src_dir: str, suffix_list: List[str], recursive: bool = False
+    src_dir: str, suffix_list: List[str], recursive: bool = False
 ):
     """
     :param src_dir:
@@ -63,17 +62,21 @@ class AestheticMonitor:
             existing_df = pd.read_csv(self.output_csv)
 
             # Filter the DataFrame to only include files within the monitor_dir
-            existing_df = existing_df[existing_df['filename'].isin(img_files_basename)]
+            existing_df = existing_df[existing_df["filename"].isin(img_files_basename)]
             logged_files = set(existing_df["filename"])
 
             # Check if the 'score' and 'md5' columns exist and if they have any missing values
-            if 'score' not in existing_df.columns or 'md5' not in existing_df.columns:
+            if "score" not in existing_df.columns or "md5" not in existing_df.columns:
                 # If the columns do not exist, add all logged files to files_to_change
                 files_to_change.extend([[monitor_dir, img] for img in logged_files])
             else:
                 # If the columns exist, add files with missing 'score' or 'md5' to files_to_change
-                missing_score_or_md5 = existing_df.loc[existing_df[['score', 'md5']].isnull().any(axis=1), 'filename']
-                files_to_change.extend([[monitor_dir, img] for img in missing_score_or_md5])
+                missing_score_or_md5 = existing_df.loc[
+                    existing_df[["score", "md5"]].isnull().any(axis=1), "filename"
+                ]
+                files_to_change.extend(
+                    [[monitor_dir, img] for img in missing_score_or_md5]
+                )
         else:
             logged_files = set()
 

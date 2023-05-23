@@ -12,7 +12,10 @@ def count_folders(source_dir: str):
         count += len(dirs)
     return count
 
-def copy_files_newer_than_year(source_dir: str, dest_dir: str = None, min_year: int = 2018, progress_bar=None):
+
+def copy_files_newer_than_year(
+    source_dir: str, dest_dir: str = None, min_year: int = 2018, progress_bar=None
+):
     if progress_bar is None:
         total_folders = count_folders(source_dir)
         progress_bar = tqdm(total=total_folders, desc="Copying folders")
@@ -44,7 +47,8 @@ def copy_files_newer_than_year(source_dir: str, dest_dir: str = None, min_year: 
     if progress_bar.n == progress_bar.total:
         progress_bar.close()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     MIN_YEAR = 2020
     source_root = r"D:\CSC\twitter-suite\gallery-dl\twitter_z3zz4"
     destination_root = f"{source_root}_min{MIN_YEAR}"

@@ -1,11 +1,18 @@
 from .move_small_files import move_small_files as _move_small_files
 from .move_folders_by_txt import move_folders_by_txt as _move_folders_by_txt
-from .move_low_aesthetic_files import move_low_aesthetic_files as _move_low_aesthetic_files
+from .move_low_aesthetic_files import (
+    move_low_aesthetic_files as _move_low_aesthetic_files,
+)
 from .move_old_files import move_files_older_than as _move_files_older_than
-from .copy_file_newer_than import copy_files_newer_than_year as _copy_files_newer_than_year
+from .copy_file_newer_than import (
+    copy_files_newer_than_year as _copy_files_newer_than_year,
+)
 from .move_by_phash_diff_v2 import move_by_phash_diff as _move_by_phash_diff
-from .move_file_older_than import move_files_older_than_year as _move_files_older_than_year
+from .move_file_older_than import (
+    move_files_older_than_year as _move_files_older_than_year,
+)
 from .move_non_anime_files import move_non_anime_files as _move_non_anime_files
+
 
 def move_small_files(source_root: str, size_threshold_kb=70, dimensions_threshold=768):
     """
@@ -14,7 +21,9 @@ def move_small_files(source_root: str, size_threshold_kb=70, dimensions_threshol
     _move_small_files(source_root, size_threshold_kb, dimensions_threshold)
 
 
-def move_folders_by_txt(txt_file: str, base_dir: str, dst_dir: str, copy: bool = False, min_year: int = 2018):
+def move_folders_by_txt(
+    txt_file: str, base_dir: str, dst_dir: str, copy: bool = False, min_year: int = 2018
+):
     """
     根据txt_file中的文件夹名字，从base_dir中移动文件夹到destination_dir中
     :param copy: 复制文件夹 (or 移动)
@@ -37,7 +46,9 @@ def move_files_older_than(source_root: str, min_year: int = 2020):
     _move_files_older_than(source_root, min_year)
 
 
-def copy_files_newer_than_year(source_root: str, dest_dir: str = None, min_year: int = 2018):
+def copy_files_newer_than_year(
+    source_root: str, dest_dir: str = None, min_year: int = 2018
+):
     """
     复制source_root里创建时间晚于min_year的文件
     """
@@ -50,11 +61,15 @@ def move_by_phash_diff(source_root: str, csv_file: str = None, threshold: int = 
     """
     _move_by_phash_diff(source_root, csv_file=csv_file, phash_threshold=threshold)
 
-def move_files_older_than_year(source_root: str, dest_dir: str = None, min_year: int = 2019):
+
+def move_files_older_than_year(
+    source_root: str, dest_dir: str = None, min_year: int = 2019
+):
     """
     移动source_root里创建时间早于min_year的文件
     """
     _move_files_older_than_year(source_root, dest_dir, min_year)
+
 
 def move_non_anime_files(source_root: str, dest_dir: str = None):
     """

@@ -20,7 +20,14 @@ from tqdm import tqdm
 
 
 class ImageResizer:
-    def __init__(self, src_dir: str, dst_dir: str, min_side: int = 768, format: str = "webp", quality=95):
+    def __init__(
+        self,
+        src_dir: str,
+        dst_dir: str,
+        min_side: int = 768,
+        format: str = "webp",
+        quality=95,
+    ):
         self.src_dir = src_dir
         self.dst_dir = dst_dir
         self.min_side = min_side
@@ -29,7 +36,11 @@ class ImageResizer:
 
     def resize_img_single(self, filepath: str, relative_path: str, filename: str):
         src_path = os.path.join(filepath, filename)
-        dst_path = os.path.join(self.dst_dir, relative_path, os.path.splitext(filename)[0] + f".{self.format}")
+        dst_path = os.path.join(
+            self.dst_dir,
+            relative_path,
+            os.path.splitext(filename)[0] + f".{self.format}",
+        )
 
         # Create the destination directory if it doesn't exist
         os.makedirs(os.path.join(self.dst_dir, relative_path), exist_ok=True)
@@ -64,13 +75,17 @@ class ImageResizer:
 
         for root, _, files in os.walk(self.src_dir):
             for file in files:
-                if file.lower().endswith((".jpg", ".jpeg", ".png", ".bmp", ".gif", ".webp")):
+                if file.lower().endswith(
+                    (".jpg", ".jpeg", ".png", ".bmp", ".gif", ".webp")
+                ):
                     relative_path = os.path.relpath(root, self.src_dir)
                     image_files.append((root, relative_path, file))
 
         n_imgs = len(image_files)
 
-        with tqdm(total=n_imgs, desc=f"Resizing images to min_side={self.min_side}: ") as pbar:
+        with tqdm(
+            total=n_imgs, desc=f"Resizing images to min_side={self.min_side}: "
+        ) as pbar:
             with ThreadPoolExecutor() as executor:
                 tasks = [
                     executor.submit(

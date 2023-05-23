@@ -98,6 +98,14 @@ def run(csv_file):
     print(notfound)
 
 
+def run_from_list(artist_handle_list):
+    finder = DanbooruArtistFinder()
+    artists, notfound = finder.find_artists(artist_handle_list)
+    for i in artists:
+        print(i)
+    print(notfound)
+
+
 def debug():
     post_url = "https://danbooru.donmai.us/posts/6081028"
     finder = DanbooruArtistFinder()
@@ -107,6 +115,8 @@ def debug():
 
 if __name__ == "__main__":
     # csv_file = "../../bin/trojblue_following.csv"
-    csv_file = r"D:\CSC\twitter-retriever\bin\usernames.csv"
-    run(csv_file)
-    # run()
+    # csv_file = r"D:\CSC\twitter-retriever\bin\usernames.csv"
+    # run(csv_file)
+
+    twitter_handles = ["dinoartforame", "taiki99"]
+    run_from_list(twitter_handles)

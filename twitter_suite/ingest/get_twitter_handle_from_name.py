@@ -10,7 +10,7 @@ def parse_names(name_str):
 
 
 def get_twitter_handle(url):
-    match = re.search(r'https?://twitter\.com/(\w+)', url)
+    match = re.search(r"https?://twitter\.com/(\w+)", url)
     return match.group(1) if match else None
 
 
@@ -32,5 +32,5 @@ def get_names(name_str):
                 print(f"Error occurred while searching for {name}: {e}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     get_names(name_str)
