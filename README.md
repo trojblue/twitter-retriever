@@ -1,16 +1,16 @@
 # twitter-retriever
 salad bar doesn't exi--
 
-瞎写的, 用来:
+## jobs:
 1. 从指定twitter用户得到关注列表
+2. 从twitter handle下载所有图片
+3. 根据规则筛图
+4. (todo) 产生webdataset格式的streaming dataset
+
+## use:
+见ipynb文件, 或者./twitter_suite下单个文件的`__main__`函数
 
 
-
-## TXT
-
-[illustration2023](https://illustration.media/about): `bin/twitter-artists-illust2023.txt`
-
-[100人展season13](https://www.eshi100.com/season13/index.html#Artist): `bin/twitter-artists-100nin2023.txt`
 
 
 
