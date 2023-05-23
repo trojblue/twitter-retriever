@@ -3,7 +3,10 @@ import shutil
 from tqdm.auto import tqdm
 from datetime import datetime
 
-def move_folders_by_txt(txt_file: str, base_dir: str, dst_dir: str, copy: bool = False, min_year: int = None) -> None:
+
+def move_folders_by_txt(
+    txt_file: str, base_dir: str, dst_dir: str, copy: bool = False, min_year: int = None
+) -> None:
     """
     Read a text file containing folder names, and move all folders with the given names
     from the base directory to the destination directory if their modification time is later than min_year.
@@ -14,6 +17,7 @@ def move_folders_by_txt(txt_file: str, base_dir: str, dst_dir: str, copy: bool =
     :param copy: If True, copy the folders instead of moving them.
     :param min_year: The minimum year of modification time to consider for individual files.
     """
+
     def eligible_for_transfer(src: str, min_year: int) -> bool:
         if min_year:
             modified_time = os.path.getmtime(src)
@@ -48,12 +52,15 @@ def move_folders_by_txt(txt_file: str, base_dir: str, dst_dir: str, copy: bool =
             for root, _, files in os.walk(src_folder):
                 for file in files:
                     src_file = os.path.join(root, file)
-                    dest_file = os.path.join(dest_folder, os.path.relpath(src_file, src_folder))
+                    dest_file = os.path.join(
+                        dest_folder, os.path.relpath(src_file, src_folder)
+                    )
 
                     if eligible_for_transfer(src_file, min_year):
                         transfer_file(src_file, dest_file, copy)
         else:
             print(f"Folder {src_folder} not found.")
+
 
 if __name__ == "__main__":
     source_root = r"D:\CSC\twitter-suite\gallery-dl\twitter"

@@ -35,17 +35,21 @@ class ImgValidator:
         return [
             os.path.join(directory, file)
             for file in os.listdir(directory)
-            if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp'))
+            if file.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".bmp"))
         ]
 
-    def validate_compressed_images(self, original_dir: str, new_dir: str, img_files: List[str] = None):
+    def validate_compressed_images(
+        self, original_dir: str, new_dir: str, img_files: List[str] = None
+    ):
         if img_files is None:
             img_files = self._get_image_files(original_dir)
 
         new_dir_imgs = self._get_image_files(new_dir)
 
         if set(img_files) != set(new_dir_imgs):
-            raise ValueError("File names do not match between the original and new directories.")
+            raise ValueError(
+                "File names do not match between the original and new directories."
+            )
         print("(1) file names match: √")
 
         invalid_files = []
@@ -61,7 +65,8 @@ class ImgValidator:
             f"(2) image integrity: {len(invalid_files)} image(s) corrupted >>> invalid_files.txt"
         )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     src_dir = "path/to/source/images"
     original_dir = "path/to/original/images"
     new_dir = "path/to/compressed/images"

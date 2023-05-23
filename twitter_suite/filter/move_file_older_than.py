@@ -13,13 +13,14 @@ def count_folders(source_dir: str):
     return count
 
 
-def move_files_older_than_year(source_dir: str, dest_dir: str = None, max_year: int = 2018, progress_bar=None):
+def move_files_older_than_year(
+    source_dir: str, dest_dir: str = None, max_year: int = 2018, progress_bar=None
+):
     if progress_bar is None:
         total_folders = count_folders(source_dir)
         progress_bar = tqdm(total=total_folders, desc="Moving folders")
 
     true_dest_dir = str(source_dir) + f"_max{max_year}" if not dest_dir else dest_dir
-    print("move_files_older_than_year: ", source_dir, true_dest_dir, max_year, sep="\n")
 
     with os.scandir(source_dir) as entries:
         for entry in entries:
@@ -46,7 +47,7 @@ def move_files_older_than_year(source_dir: str, dest_dir: str = None, max_year: 
         progress_bar.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     MAX_YEAR = 2020
     source_root = r"D:\CSC\twitter-suite\gallery-dl\twitter_z3zz4"
     destination_root = f"{source_root}_max{MAX_YEAR}"

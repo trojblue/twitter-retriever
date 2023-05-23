@@ -10,7 +10,6 @@ from utils.data_loader import PipelineDataLoader
 
 class DatasetMetrics:
     def __init__(self, source_root, is_twitter=False, logger=None):
-
         if is_twitter:
             print("twitter metrics ON; loading json files WILL BE SLOW")
 
@@ -63,7 +62,11 @@ class DatasetMetrics:
         fig = sp.make_subplots(
             rows=len(plot_configs),
             cols=len(plot_configs[0]),
-            subplot_titles=[config["title"] for config_list in plot_configs for config in config_list],
+            subplot_titles=[
+                config["title"]
+                for config_list in plot_configs
+                for config in config_list
+            ],
         )
 
         for i, config_list in enumerate(plot_configs):
@@ -71,12 +74,16 @@ class DatasetMetrics:
                 fig.add_trace(config["trace"], row=i + 1, col=j + 1)
 
         name = Path(self.source_root).name
-        fig.update_layout(title_text=f"Dataset Quality Metrics for {name}", showlegend=False)
+        fig.update_layout(
+            title_text=f"Dataset Quality Metrics for {name}", showlegend=False
+        )
         fig.show()
 
     def plot_number_of_images(self):
         topic_names, topic_counts = zip(*self.image_count.items())
-        return go.Bar(x=topic_names, y=topic_counts, text=topic_counts, textposition="auto")
+        return go.Bar(
+            x=topic_names, y=topic_counts, text=topic_counts, textposition="auto"
+        )
 
     def plot_file_size_distribution(self):
         return go.Histogram(x=self.file_sizes, nbinsx=50, histnorm="probability")
@@ -87,7 +94,9 @@ class DatasetMetrics:
 
     def plot_class_imbalance(self):
         topic_names, topic_counts = zip(*self.image_count.items())
-        return go.Bar(x=topic_names, y=topic_counts, text=topic_counts, textposition="auto")
+        return go.Bar(
+            x=topic_names, y=topic_counts, text=topic_counts, textposition="auto"
+        )
 
     def plot_fav_count_distribution(self):
         return go.Histogram(x=self.fav_count, nbinsx=1000, histnorm="probability")
@@ -97,11 +106,20 @@ def get_plot_configs(metrics: DatasetMetrics):
     # Define which plots to display
     plot_configs = [
         [
-            {"title": "Number of images per topic", "trace": metrics.plot_number_of_images()},
-            {"title": "File size distribution", "trace": metrics.plot_file_size_distribution()},
+            {
+                "title": "Number of images per topic",
+                "trace": metrics.plot_number_of_images(),
+            },
+            {
+                "title": "File size distribution",
+                "trace": metrics.plot_file_size_distribution(),
+            },
         ],
         [
-            {"title": "Image dimensions distribution", "trace": metrics.plot_image_dimensions()},
+            {
+                "title": "Image dimensions distribution",
+                "trace": metrics.plot_image_dimensions(),
+            },
             {"title": "Class imbalance", "trace": metrics.plot_class_imbalance()},
         ],
     ]
@@ -112,18 +130,30 @@ def get_twitter_plot_configs(metrics: DatasetMetrics):
     # Define which plots to display
     plot_configs = [
         [
-            {"title": "Number of images per topic", "trace": metrics.plot_number_of_images()},
-            {"title": "File size distribution", "trace": metrics.plot_file_size_distribution()},
+            {
+                "title": "Number of images per topic",
+                "trace": metrics.plot_number_of_images(),
+            },
+            {
+                "title": "File size distribution",
+                "trace": metrics.plot_file_size_distribution(),
+            },
         ],
         [
-            {"title": "Image dimensions distribution", "trace": metrics.plot_image_dimensions()},
-            {"title": "Favorite counts distribution", "trace": metrics.plot_fav_count_distribution()},
+            {
+                "title": "Image dimensions distribution",
+                "trace": metrics.plot_image_dimensions(),
+            },
+            {
+                "title": "Favorite counts distribution",
+                "trace": metrics.plot_fav_count_distribution(),
+            },
         ],
     ]
     return plot_configs
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     source_root = input("get a dir:")  # Replace with your source root folder path
     metrics = DatasetMetrics(source_root)
     plot_configs = get_plot_configs(metrics)

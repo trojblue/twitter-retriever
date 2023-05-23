@@ -4,9 +4,9 @@ import pandas as pd
 from itertools import groupby
 from operator import itemgetter
 
-def move_by_phash_diff(root_dir: str, csv_file: str=None, phash_threshold: int=4):
 
-    csv_file = csv_file or os.path.join(root_dir, 'metrics.csv')
+def move_by_phash_diff(root_dir: str, csv_file: str = None, phash_threshold: int = 4):
+    csv_file = csv_file or os.path.join(root_dir, "metrics.csv")
     # Load the CSV file into a DataFrame
     df = pd.read_csv(csv_file)
 
@@ -17,10 +17,10 @@ def move_by_phash_diff(root_dir: str, csv_file: str=None, phash_threshold: int=4
             file_paths[filename] = os.path.join(foldername, filename)
 
     # Group the files by phash values
-    df['path'] = df['filename'].apply(lambda x: file_paths.get(x, None))
-    df = df[df['path'].notnull()]
-    df['phash_int'] = df['phash'].apply(lambda x: int(x, 16))
-    df_sorted = df.sort_values('phash_int')
+    df["path"] = df["filename"].apply(lambda x: file_paths.get(x, None))
+    df = df[df["path"].notnull()]
+    df["phash_int"] = df["phash"].apply(lambda x: int(x, 16))
+    df_sorted = df.sort_values("phash_int")
     grouped = groupby(df_sorted.itertuples(), key=lambda x: x.phash_int)
 
     # Define the target root directory
@@ -35,7 +35,7 @@ def move_by_phash_diff(root_dir: str, csv_file: str=None, phash_threshold: int=4
 
         for i in range(len(group_list) - 1):
             file1 = group_list[i]
-            file2 = group_list[i+1]
+            file2 = group_list[i + 1]
 
             # Check if the phash difference is within the threshold
             if file2.phash_int - file1.phash_int <= phash_threshold:
@@ -54,7 +54,7 @@ def move_by_phash_diff(root_dir: str, csv_file: str=None, phash_threshold: int=4
     print(f"Moved {move_count} files to {target_root_dir}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Usage example
     root_dir = input("root dir:")
     csv_file = os.path.join(root_dir, "metrics.csv")
