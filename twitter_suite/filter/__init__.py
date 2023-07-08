@@ -11,7 +11,7 @@ from .move_by_phash_diff_v2 import move_by_phash_diff as _move_by_phash_diff
 from .move_file_older_than import (
     move_files_older_than_year as _move_files_older_than_year,
 )
-from .move_non_anime_files import move_non_anime_files as _move_non_anime_files
+from .file_mover import FileMover
 
 
 def move_small_files(source_root: str, size_threshold_kb=70, dimensions_threshold=768):
@@ -71,8 +71,9 @@ def move_files_older_than_year(
     _move_files_older_than_year(source_root, dest_dir, min_year)
 
 
-def move_non_anime_files(source_root: str, dest_dir: str = None):
-    """
-    移动source_root里不是动漫的文件
-    """
-    _move_non_anime_files(source_root, dest_dir)
+# def move_non_anime_files(source_root: str, dest_dir: str = None):
+#     """
+#     移动source_root里不是动漫的文件
+#     """
+#     FileMover(source_root).move_non_anime_files(source_root, dest_dir)
+#     _move_non_anime_files(source_root, dest_dir)
