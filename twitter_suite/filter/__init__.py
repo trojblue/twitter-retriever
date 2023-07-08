@@ -71,9 +71,9 @@ def move_files_older_than_year(
     _move_files_older_than_year(source_root, dest_dir, min_year)
 
 
-def move_non_anime_files(source_root: str, dest_dir: str = None):
-    """
-    移动source_root里不是动漫的文件
-    """
-    FileMover(source_root).move_non_anime_files(source_root, dest_dir)
-    _move_non_anime_files(source_root, dest_dir)
+# def move_non_anime_files(source_root: str, dest_dir: str = None):
+#     """
+#     移动source_root里不是动漫的文件
+#     """
+#     FileMover(source_root).move_non_anime_files(source_root, dest_dir)
+#     _move_non_anime_files(source_root, dest_dir)
