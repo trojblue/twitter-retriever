@@ -83,8 +83,6 @@ class InfoRetrieverBase:
         for cookie in cookies:
             self.driver.add_cookie(cookie)
 
-
-
         # with open(self.storage_file, "r") as f:
         #     storage_data = json.load(f)
         # for key, value in storage_data["local_storage"].items():

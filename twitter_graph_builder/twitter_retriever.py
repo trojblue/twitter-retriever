@@ -8,6 +8,9 @@ from Scweet.utils import get_users_follow
 from typing import *
 from retriever_base import InfoRetrieverBase
 
+import datetime
+import unibox
+
 
 class RetriverConfig():
     def __init__(
@@ -99,35 +102,20 @@ class ArtistInfoRetriever(InfoRetrieverBase):
         return followers
 
 
-def debug():
+def get_user_following(username):
     retriever = ArtistInfoRetriever(headless=False, login=False)
-
-    users = ["g0ach"]
+    users = [username]
     following = retriever.get_users_following(users)
     print("D")
 
-    following_list = following['trojblue']
-    with open("following.txt", "w", encoding="utf-8") as f:
-        # for i in following_list:
-        f.write("\n".join(following_list))
+    following_list = following[username]
+
+    # get human-readable current time
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    unibox.saves(following_list, f"{username}_following_{current_time}.txt")
 
 
 if __name__ == "__main__":
-    debug()
-
-    # users = [
-    #     "yada_cc",
-    # ]
-    # env_path = ".env"
-    #
-    # following = get_users_following(
-    #     users=users,
-    #     env=env_path,
-    #     verbose=0,
-    #     headless=True,
-    #     wait=2,
-    #     limit=50,
-    #     file_path=None,
-    # )
-    #
-    # print("D")
+    username = "Nyanko692"
+    # https: // twitter.com / Nyanko692 / following
+    get_user_following(username)
